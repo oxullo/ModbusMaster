@@ -71,10 +71,11 @@ class ModbusMaster
   public:
     ModbusMaster();
    
-    void begin(uint8_t, Stream &serial);
+    void begin(uint8_t, Stream &serial, uint16_t reponseTimeout=ku16MBDefaultResponseTimeout);
     void idle(void (*)());
     void preTransmission(void (*)());
     void postTransmission(void (*)());
+    void setResponseTimeout(uint16_t timeout);
 
     // Modbus exception codes
     /**
@@ -233,6 +234,7 @@ class ModbusMaster
     uint16_t* rxBuffer; // from Wire.h -- need to clean this up Rx
     uint8_t _u8ResponseBufferIndex;
     uint8_t _u8ResponseBufferLength;
+    uint16_t _u16ResponseTimeout;
     
     // Modbus function codes for bit access
     static const uint8_t ku8MBReadCoils                  = 0x01; ///< Modbus function 0x01 Read Coils
@@ -248,8 +250,8 @@ class ModbusMaster
     static const uint8_t ku8MBMaskWriteRegister          = 0x16; ///< Modbus function 0x16 Mask Write Register
     static const uint8_t ku8MBReadWriteMultipleRegisters = 0x17; ///< Modbus function 0x17 Read Write Multiple Registers
     
-    // Modbus timeout [milliseconds]
-    static const uint16_t ku16MBResponseTimeout          = 2000; ///< Modbus timeout [milliseconds]
+    // Modbus default timeout [milliseconds]
+    static const uint16_t ku16MBDefaultResponseTimeout   = 2000; ///< Modbus default timeout [milliseconds]
     
     // master function that conducts Modbus transactions
     uint8_t ModbusMasterTransaction(uint8_t u8MBFunction);
